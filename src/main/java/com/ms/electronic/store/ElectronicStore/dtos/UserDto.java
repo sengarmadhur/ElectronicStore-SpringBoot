@@ -1,6 +1,5 @@
 package com.ms.electronic.store.ElectronicStore.dtos;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 @Getter

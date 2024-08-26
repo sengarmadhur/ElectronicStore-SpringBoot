@@ -1,7 +1,6 @@
 package com.ms.electronic.store.ElectronicStore.services;
 
 import com.ms.electronic.store.ElectronicStore.dtos.UserDto;
-import com.ms.electronic.store.ElectronicStore.entities.User;
 
 import java.util.List;
 

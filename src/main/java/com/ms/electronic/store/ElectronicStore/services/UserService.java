@@ -1,15 +1,21 @@
 package com.ms.electronic.store.ElectronicStore.services;
 
+import com.ms.electronic.store.ElectronicStore.dtos.UserDto;
 import com.ms.electronic.store.ElectronicStore.entities.User;
 
+import java.util.List;
+
 public interface UserService {
-    //create
-    User createUser(User user) ;
-    //update
-    //delete
-    //get all users
-    //get single user by id
-    //get single user by email
-    //search user
-    //other user specific features
+
+    UserDto createUser(UserDto userDto) ;
+    UserDto updateUser(UserDto userDto, String userId);
+
+    void deleteUser(String userId);
+    List<UserDto> getAllUser();
+
+    UserDto getUserById(String userId);
+
+    UserDto getUserByEmail(String email);
+
+    List<UserDto> searchUser(String keyword);
 }

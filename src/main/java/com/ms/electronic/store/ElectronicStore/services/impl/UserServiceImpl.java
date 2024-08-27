@@ -4,6 +4,7 @@ import com.ms.electronic.store.ElectronicStore.dtos.UserDto;
 import com.ms.electronic.store.ElectronicStore.entities.User;
 import com.ms.electronic.store.ElectronicStore.repositories.UserRepository;
 import com.ms.electronic.store.ElectronicStore.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ModelMapper mapper;
+
     @Override
     public UserDto createUser(UserDto userDto) {
         String userId = UUID.randomUUID().toString();
@@ -27,55 +31,79 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto, String userId) {
-        return null;
+
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            return new RuntimeException("User not found");
+        });
+
+        user.setName(userDto.getName());
+        user.setAbout(userDto.getAbout());
+        user.setGender(userDto.getGender());
+        user.setPassword(userDto.getPassword());
+        user.setImageName(userDto.getImageName());
+
+        User updatedUser = userRepository.save(user);
+        return entityToDto(updatedUser);
     }
 
     @Override
     public void deleteUser(String userId) {
-
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            return new RuntimeException("User not found");
+        });
+        userRepository.delete(user);
     }
 
     @Override
     public List<UserDto> getAllUser() {
-        return null;
+        List<User> users = userRepository.findAll();
+
+        List<UserDto> usersDto = users.stream().map(user -> entityToDto(user)).toList();
+        return usersDto;
     }
 
     @Override
     public UserDto getUserById(String userId) {
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> {return new RuntimeException("User not found");});
+        return entityToDto(user);
     }
 
     @Override
     public UserDto getUserByEmail(String email) {
-        return null;
+        User user = userRepository.findByEmail(email).orElseThrow(()-> {return new RuntimeException("User not found");});
+        return entityToDto(user);
     }
 
     @Override
     public List<UserDto> searchUser(String keyword) {
-        return null;
+        List<User> users = userRepository.findByNameContaining(keyword);
+        List<UserDto> userDtos = users.stream().map(user -> entityToDto(user)).toList();
+        return userDtos;
     }
 
     private User dtoToEntity(UserDto userDto) {
-        return User.builder()
-                .name(userDto.getName())
-                .userId(userDto.getUserId())
-                .email(userDto.getEmail())
-                .about(userDto.getAbout())
-                .gender(userDto.getGender())
-                .password(userDto.getPassword())
-                .imageName(userDto.getImageName())
-                .build();
+//        return User.builder()
+//                .name(userDto.getName())
+//                .userId(userDto.getUserId())
+//                .email(userDto.getEmail())
+//                .about(userDto.getAbout())
+//                .gender(userDto.getGender())
+//                .password(userDto.getPassword())
+//                .imageName(userDto.getImageName())
+//                .build();
+        return mapper.map(userDto, User.class);
     }
 
     private UserDto entityToDto(User user) {
-        return UserDto.builder()
-                .name(user.getName())
-                .userId(user.getUserId())
-                .about(user.getAbout())
-                .gender(user.getGender())
-                .imageName(user.getImageName())
-                .password(user.getPassword())
-                .email(user.getEmail())
-                .build();
+//        return UserDto.builder()
+//                .name(user.getName())
+//                .userId(user.getUserId())
+//                .about(user.getAbout())
+//                .gender(user.getGender())
+//                .imageName(user.getImageName())
+//                .password(user.getPassword())
+//                .email(user.getEmail())
+//                .build();
+        return mapper.map(user, UserDto.class);
     }
 }

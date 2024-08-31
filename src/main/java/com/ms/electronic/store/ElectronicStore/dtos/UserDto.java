@@ -1,5 +1,6 @@
 package com.ms.electronic.store.ElectronicStore.dtos;
 
+import com.ms.electronic.store.ElectronicStore.validate.ImageNameValid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -14,7 +15,7 @@ import lombok.*;
 public class UserDto {
     private String userId;
 
-    @Size(min = 3, max = 15, message = "Invalid Name !!")
+    @Size(min = 3, max = 25, message = "Invalid Name !!")
     private String name;
 
     @NotBlank(message = "Password is required !!")
@@ -30,5 +31,7 @@ public class UserDto {
 
     @NotBlank(message = "Write something about yourself !!")
     private String about;
+
+    @ImageNameValid
     private String imageName;
 }

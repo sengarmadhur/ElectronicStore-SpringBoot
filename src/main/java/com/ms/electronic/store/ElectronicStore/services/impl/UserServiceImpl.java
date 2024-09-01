@@ -8,13 +8,21 @@ import com.ms.electronic.store.ElectronicStore.helper.Helper;
 import com.ms.electronic.store.ElectronicStore.repositories.UserRepository;
 import com.ms.electronic.store.ElectronicStore.services.UserService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +35,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper mapper;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Value("${user.profile.image.path}")
+    private String imagePath;
+
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -59,6 +73,15 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(()->{
             return new ResourceNotFoundException("User not found");
         });
+        String fullPath = imagePath + user.getImageName();
+        try {
+            Path path = Paths.get(fullPath);
+            Files.delete(path);
+        } catch (NoSuchFileException ex) {
+            logger.warn("User image not found in path {}", fullPath);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         userRepository.delete(user);
     }
 

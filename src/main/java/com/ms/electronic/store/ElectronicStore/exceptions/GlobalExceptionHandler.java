@@ -47,4 +47,11 @@ public class GlobalExceptionHandler {
         String property = ex.getPropertyName();
         return new ResponseEntity<>(property + " is not a valid property", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(BadApiRequest.class)
+    public ResponseEntity<ApiResponseMessage> handleBadApiRequest(BadApiRequest ex) {
+        logger.info("Bad API Request");
+        ApiResponseMessage response = ApiResponseMessage.builder().message(ex.getMessage()).status(HttpStatus.BAD_REQUEST).success(false).build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

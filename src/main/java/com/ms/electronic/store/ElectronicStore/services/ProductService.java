@@ -8,6 +8,8 @@ import java.util.List;
 public interface ProductService {
     ProductDto create(ProductDto productDto);
 
+    ProductDto createWithCategory(ProductDto productDto, String categoryId);
+
     ProductDto update(ProductDto productDto, String productId);
 
     void delete(String productId);
@@ -19,4 +21,6 @@ public interface ProductService {
     PageableResponse<ProductDto> getAllLive(int pageNumber, int pageSize, String sortBy, String sortDir);
 
     PageableResponse<ProductDto> searchByTitle(String title, int pageNumber, int pageSize, String sortBy, String sortDir);
+
+    ProductDto updateCategory(String productId, String categoryId);
 }

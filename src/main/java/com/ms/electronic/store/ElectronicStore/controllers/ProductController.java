@@ -59,7 +59,7 @@ public class ProductController {
         return  new ResponseEntity<>(new ApiResponseMessage("User deleted successfully", true, HttpStatus.OK), HttpStatus.OK);
     }
 
-    @GetMapping("/productId")
+    @GetMapping("/{productId}")
     public ResponseEntity<ProductDto> get(@PathVariable String productId) {
         ProductDto productDto = productService.get(productId);
         return new ResponseEntity<>(productDto, HttpStatus.OK);

@@ -3,7 +3,9 @@ package com.ms.electronic.store.ElectronicStore.controllers;
 import com.ms.electronic.store.ElectronicStore.dtos.ApiResponseMessage;
 import com.ms.electronic.store.ElectronicStore.dtos.CategoryDto;
 import com.ms.electronic.store.ElectronicStore.dtos.PageableResponse;
+import com.ms.electronic.store.ElectronicStore.dtos.ProductDto;
 import com.ms.electronic.store.ElectronicStore.services.CategoryService;
+import com.ms.electronic.store.ElectronicStore.services.ProductService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,10 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @PostMapping
@@ -52,4 +57,18 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> getSingleCategory(@PathVariable String categoryId) {
         return new ResponseEntity<>(categoryService.get(categoryId), HttpStatus.OK);
     }
+
+    @PostMapping("/{categoryId}/products")
+    public ResponseEntity<ProductDto> createProductWithCategory(@PathVariable String categoryId,
+                                                                @RequestBody ProductDto productDto) {
+        return new ResponseEntity<>(productService.createWithCategory(productDto, categoryId),
+                HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{categoryId}/products/{productId}")
+    public ResponseEntity<ProductDto> updateCategoryOfProduct(@PathVariable String categoryId, @PathVariable String productId) {
+        ProductDto productDto = productService.updateCategory(productId, categoryId);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.ms.electronic.store.ElectronicStore.dtos;
 
+import com.ms.electronic.store.ElectronicStore.entities.Category;
 import jakarta.persistence.Column;
 import lombok.*;
 
@@ -29,4 +30,5 @@ public class ProductDto {
     private boolean stock;
 
     private String productImage;
+    private CategoryDto category;
 }
